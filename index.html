@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <meta name="robots" content="noindex,nofollow">
+  <title>第63回熊工定演｜ゲネプロ無料見学</title>
+  <style>
+    :root { --ink:#17314c; --blue:#173f6b; --gold:#b8904d; --bg:#f3f5f8; }
+    * {box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--ink);font-family:'Hiragino Kaku Gothic ProN','Yu Gothic',Meiryo,system-ui,sans-serif;line-height:1.7}
+    .top{background:linear-gradient(135deg,#102b48,#285277);color:white;padding:38px 16px 42px;text-align:center}
+    .top .eyebrow{letter-spacing:.17em;color:#f5dcab;font-size:13px}.top h1{font-size:clamp(27px,5vw,38px);line-height:1.35;margin:8px auto;max-width:650px}.top p{font-size:16px;margin:10px auto 0;opacity:.95}
+    main{max-width:770px;margin:-22px auto 50px;padding:0 16px}.card{background:white;border-radius:17px;padding:26px;box-shadow:0 6px 26px #152f4812;margin-bottom:18px}
+    .info{display:grid;grid-template-columns:110px 1fr;gap:12px;border-bottom:1px solid #edf0f2;padding:8px 0}.info:last-child{border:none}
+    .info strong{color:var(--blue)}h2{font-size:21px;margin:0 0 15px}h3{font-size:17px;margin:5px 0 10px}
+    .step{display:inline-grid;place-items:center;width:33px;height:33px;background:var(--blue);color:white;border-radius:50%;font-weight:bold;margin-right:9px}
+    label{display:block;font-weight:650;margin-top:16px}.req{color:#b02734;font-size:12px;margin-left:5px}
+    input,select{width:100%;border:1px solid #b9c7d4;border-radius:9px;padding:13px 12px;font:inherit;background:white;min-height:49px}
+    input:focus,select:focus{outline:3px solid #b8cce0;border-color:var(--blue)}.option-row{display:flex;gap:20px;flex-wrap:wrap;padding:8px 0}.option-row label{margin:0;font-weight:400}.option-row input{width:auto;min-height:unset}
+    .check{display:flex;align-items:flex-start;gap:10px;font-weight:400}.check input{width:20px;min-height:unset;margin-top:7px;flex:none}
+    button{width:100%;padding:15px 12px;background:var(--blue);color:white;border:0;border-radius:9px;font:inherit;font-weight:700;cursor:pointer;margin-top:20px}
+    button:hover{background:#0d2a47}button:disabled{opacity:.55;cursor:wait}.note{font-size:13px;color:#516479}.warn{background:#fff9ed;border-left:4px solid var(--gold);padding:12px 14px;border-radius:3px;font-size:14px}
+    .hp{position:absolute;left:-9999px;top:-9999px}footer{text-align:center;padding:10px 15px 30px;font-size:13px;color:#586c7c}
+    [hidden]{display:none!important}@media(max-width:520px){.card{padding:21px 17px}.info{grid-template-columns:95px 1fr}.top{padding:30px 12px 45px}}
+  </style>
+</head>
+<body>
+  <header class="top"><div class="eyebrow">第63回 熊工定期演奏会 特別企画</div><h1>小・中学生 ゲネプロ無料見学</h1><p>本番直前の演奏や舞台づくりを見学しませんか？</p></header>
+  <main>
+    <section class="card" aria-label="開催概要">
+      <h2>開催概要</h2>
+      <div class="info"><strong>開催日</strong><span>2027年1月16日（土）</span></div>
+      <div class="info"><strong>受付</strong><span>9:45〜10:00／正面受付口</span></div>
+      <div class="info"><strong>説明・移動</strong><span>10:00〜</span></div>
+      <div class="info"><strong>見学終了</strong><span>11:30</span></div>
+      <div class="info"><strong>解散</strong><span>アンケート提出後、11:45までに順次解散</span></div>
+      <div class="info"><strong>会場</strong><span>市民会館シアーズホーム夢ホール 大ホール</span></div>
+      <div class="info"><strong>対象・料金</strong><span>小学生・中学生／無料。児童・生徒１名につき保護者１名まで帯同可能</span></div>
+      <p class="warn">見学中は原則として途中退館・再入場できません。トイレ・体調不良・緊急時には係員にお申し出ください。撮影・録音はお控えください。</p>
+    </section>
+
+    <section class="card" id="emailStage">
+      <h2><span class="step">1</span>メールアドレスの確認</h2>
+      <p>申し込みは保護者の方が行ってください。メールアドレスに専用リンクを送ります。リンクから申込フォームへ進んでください。</p>
+      <form method="post" action="GAS_WEB_APP_URL_HERE" id="emailForm">
+        <input type="hidden" name="action" value="sendLink">
+        <div class="hp"><label>この項目は入力しないでください<input name="website" tabindex="-1" autocomplete="off"></label></div>
+        <label for="email">QRコード受信用メールアドレス <span class="req">必須</span></label>
+        <input type="email" name="email" id="email" maxlength="254" placeholder="example@example.com" autocomplete="email" required>
+        <label class="check"><input type="checkbox" name="agree" value="yes" required>申込受付・当日の安全管理・緊急連絡・QRコード送信のため、入力情報を学校が利用することに同意します。</label>
+        <button type="submit">確認メールを送信する</button>
+        <p class="note">届かない場合は迷惑メールをご確認ください。メールの専用リンクは24時間有効です。</p>
+      </form>
+    </section>
+
+    <section class="card" id="formStage" hidden>
+      <h2><span class="step">2</span>見学申込み</h2>
+      <p>メールのリンクを確認できました。保護者の方が下記をご入力ください。<br>兄弟姉妹が参加する場合は、１名ずつお申し込みください。</p>
+      <form method="post" action="GAS_WEB_APP_URL_HERE" id="entryForm">
+        <input type="hidden" name="action" value="register">
+        <input type="hidden" name="authToken" id="authToken">
+        <div class="hp"><label>この項目は入力しないでください<input name="website" tabindex="-1" autocomplete="off"></label></div>
+        <label for="childName">児童・生徒氏名 <span class="req">必須</span></label>
+        <input name="childName" id="childName" autocomplete="off" maxlength="60" required>
+        <label for="grade">区分 <span class="req">必須</span></label>
+        <select name="grade" id="grade" required>
+          <option value="">選択してください</option>
+          <option>小学1年</option><option>小学2年</option><option>小学3年</option><option>小学4年</option><option>小学5年</option><option>小学6年</option>
+          <option>中学1年</option><option>中学2年</option><option>中学3年</option>
+        </select>
+        <label for="school">学校名 <span class="req">必須</span></label>
+        <input name="school" id="school" maxlength="100" placeholder="例：熊本市立〇〇小学校" required>
+        <label for="guardianName">保護者氏名 <span class="req">必須</span></label>
+        <input name="guardianName" id="guardianName" maxlength="60" autocomplete="name" required>
+        <label for="phone">保護者の携帯電話番号 <span class="req">必須</span></label>
+        <input name="phone" id="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="09012345678" pattern="0[789]0[0-9]{8}" title="ハイフンなしで11桁の携帯電話番号をご入力ください" required>
+        <label>保護者の帯同予定 <span class="req">必須</span></label>
+        <div class="option-row"><label><input type="radio" name="accompanied" value="あり" required> あり（１名）</label><label><input type="radio" name="accompanied" value="なし"> なし</label></div>
+        <label class="check"><input type="checkbox" name="agree" value="yes" required>保護者として申込みます。見学中のルールおよび個人情報の利用目的を確認しました。</label>
+        <button type="submit">この内容で申し込む</button>
+        <p class="note">送信後、受付QRコードを認証済みメールアドレスへ送ります。スマートフォンで提示するか、メール・添付画像を印刷してご持参ください。</p>
+      </form>
+    </section>
+  </main>
+  <footer>熊本県立熊本工業高等学校 吹奏楽部<br>※リハーサルの進行状況により、見学内容を変更する場合があります。</footer>
+  <script>
+    (() => {
+      // 認証トークンはURLフラグメント（#auth=...）でのみ受け取る。
+      // その後、画面上のURLから削除する。外部ライブラリは読み込まない。
+      const hash = new URLSearchParams(location.hash.slice(1));
+      const token = hash.get('auth');
+      if (token && /^[A-Za-z0-9-]{32,128}$/.test(token)) {
+        document.getElementById('authToken').value = token;
+        document.getElementById('emailStage').hidden = true;
+        document.getElementById('formStage').hidden = false;
+        document.getElementById('formStage').scrollIntoView({block:'start'});
+        history.replaceState(null, '', location.pathname + location.search);
+      }
+      for (const id of ['emailForm','entryForm']) {
+        document.getElementById(id).addEventListener('submit', function () {
+          const btn = this.querySelector('button[type=submit]');
+          btn.disabled = true;
+          btn.textContent = '送信しています…';
+        });
+      }
+    })();
+  </script>
+</body>
+</html>
