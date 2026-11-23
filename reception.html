@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta name="robots" content="noindex,nofollow">
+<title>係員用｜第63回熊工定演 ゲネプロ受付</title>
+<style>
+  :root{--navy:#153a60;--bg:#f2f5f8;--ink:#173047;--muted:#587087}
+  *{box-sizing:border-box}body{font-family:"Yu Gothic",Meiryo,system-ui,sans-serif;background:var(--bg);color:var(--ink);margin:0;line-height:1.65}
+  .hero{background:linear-gradient(120deg,#0f2b49,#246087);padding:24px 14px 35px;text-align:center;color:#fff}
+  .hero small{color:#f6d9a5}.hero h1{font-size:clamp(23px,5vw,31px);margin:4px 0}
+  main{max-width:640px;margin:-17px auto 40px;padding:0 14px}.card{background:#fff;border-radius:14px;padding:21px 18px;box-shadow:0 6px 22px #162a3e14;margin-bottom:16px}
+  label{display:block;font-weight:700;margin:12px 0 5px}input{width:100%;padding:12px;border-radius:8px;border:1px solid #b6c6d4;font-size:17px;min-height:49px}
+  button{background:var(--navy);color:#fff;border:0;border-radius:9px;padding:13px 16px;font:700 16px/1.4 inherit;cursor:pointer;min-height:49px}
+  button:disabled{opacity:.55;cursor:not-allowed}.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}.actions button{flex:1}
+  #reader{max-width:480px;min-height:80px;margin:14px auto 4px;overflow:hidden;border-radius:12px}
+  .note{color:var(--muted);font-size:13px}.status{padding:11px 13px;margin:14px 0;border-radius:8px;background:#e7f1f9;font-weight:600}
+  .status.warning{background:#fff1dc;color:#99540e}.status.success{background:#dff5e9;color:#176741}
+  .badge{font-size:12px;letter-spacing:.1em;background:#f7e7c8;color:#8a571a;padding:4px 8px;border-radius:6px}
+  .hidden{display:none!important}footer{text-align:center;padding:4px 12px 30px;color:#6b7e8e;font-size:12px}
+</style>
+<!-- GitHub Pages（HTTPS）で動作。QRの読み取りはブラウザ内だけで実施。 -->
+<script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+</head>
+<body>
+<header class="hero"><small>第63回 熊工定期演奏会｜当日スタッフ用</small><h1>ゲネプロ無料見学 QR受付</h1><div>2027年1月16日（土）9:45～</div></header>
+<main>
+  <section class="card"><span class="badge">係員専用</span><h2>受付担当の確認</h2>
+    <p class="note">このページのURLや受付用パスワードは、保護者へ案内しないでください。パスワードは公開GitHubのHTMLには保存されていません。</p>
+    <label for="staffName">受付担当者名</label><input id="staffName" autocomplete="off" maxlength="30" placeholder="例：本田">
+    <label for="staffKey">受付用パスワード</label><input id="staffKey" type="password" autocomplete="off" spellcheck="false" placeholder="GAS実行ログで発行した文字列">
+    <div class="actions"><button id="saveSettings" type="button">この端末で受付を開始</button><button id="logout" type="button" style="background:#697d90">ログアウト</button></div>
+    <p class="note">入力内容はこのタブ内のセッション中のみ保持します。共有端末では終了時にログアウトしてください。</p>
+  </section>
+  <section class="card hidden" id="readerSection">
+    <h2>① QRコードを読み取る</h2><p class="note">スマートフォンで「カメラを起動」を押し、QRコードを枠に合わせてください。カメラが使えない場合は受付番号を手入力できます。</p>
+    <div id="reader"></div>
+    <div class="actions"><button type="button" id="startCamera">カメラを起動</button><button type="button" id="stopCamera" style="background:#667b8d">カメラを停止</button></div>
+    <div id="scanStatus" class="status" role="status" aria-live="polite">受付待機中です。</div>
+    <label for="entryId">② 受付番号（QR読み取り後に自動入力）</label>
+    <input id="entryId" name="entryId" maxlength="30" autocapitalize="characters" autocomplete="off" placeholder="KG63-XXXXXXXXXXXXXXXXXXXXXXXX">
+    <form id="lookupForm" method="post" action="https://script.google.com/macros/s/AKfycbzzRIrM9LWKKLUvDu8y9vkTGXs5bwD8QPKU9-3NlFIZWw9w0K92bw7JfoRjIDKAY58JRA/exec">
+      <input type="hidden" name="action" value="staffLookup">
+      <input type="hidden" id="formId" name="entryId">
+      <input type="hidden" id="formKey" name="staffKey">
+      <input type="hidden" id="formStaff" name="staffName">
+      <button style="width:100%;margin-top:17px" type="submit" id="submitLookup">申込内容を確認する</button>
+    </form>
+    <p class="note">送信後にGASの確認画面が開き、児童生徒の氏名を照合して「受付済みにする」を押します。確認画面で確定するまでは台帳を変更しません。</p>
+  </section>
+</main>
+<footer>熊本県立熊本工業高等学校 吹奏楽部｜スタッフ用</footer>
+<script>
+(() => {
+  'use strict';
+  const $ = (id) => document.getElementById(id);
+  const VALID = /^KG63-[A-F0-9]{24}$/;
+  let scanner = null, cameraRunning = false, busy = false;
+  const storedName = sessionStorage.getItem('KG63_staffName') || '';
+  const storedKey = sessionStorage.getItem('KG63_staffKey') || '';
+  $('staffName').value = storedName;
+  $('staffKey').value = storedKey;
+  if(storedName && storedKey) $('readerSection').classList.remove('hidden');
+  function status(text, kind){$('scanStatus').textContent=text;$('scanStatus').className='status'+(kind?' '+kind:'');}
+  function currentId(){return $('entryId').value.trim().toUpperCase();}
+  function acceptRead(text){
+    if (busy) return;
+    const v = String(text || '').trim().toUpperCase();
+    if (!VALID.test(v)) {status('熊工ゲネプロの受付QRではありません。別のQRをお試しください。','warning');return;}
+    busy=true; $('entryId').value = v; status('読み取り成功。氏名照合へお進みください。','success');
+    if(navigator.vibrate) navigator.vibrate(100);
+    stopCamera().finally(() => {busy=false;});
+  }
+  async function stopCamera(){
+    if(!scanner || !cameraRunning) return;
+    try{await scanner.stop();}catch(err){console.warn('camera stop', err);}finally{cameraRunning=false;}
+    try{scanner.clear();}catch(e){}
+  }
+  $('saveSettings').addEventListener('click',()=>{
+    const name=$('staffName').value.trim();const key=$('staffKey').value.trim();
+    if(!name || !/^[A-Za-z0-9]{32,128}$/.test(key)){alert('担当者名と、GASで生成した32文字以上の受付用パスワードを入力してください。');return;}
+    sessionStorage.setItem('KG63_staffName',name);sessionStorage.setItem('KG63_staffKey',key);
+    $('readerSection').classList.remove('hidden');status('カメラを起動するか、受付番号を入力してください。');
+    $('readerSection').scrollIntoView({block:'start',behavior:'smooth'});
+  });
+  $('logout').addEventListener('click',async()=>{
+    await stopCamera();sessionStorage.removeItem('KG63_staffName');sessionStorage.removeItem('KG63_staffKey');
+    $('staffName').value='';$('staffKey').value='';$('entryId').value='';$('readerSection').classList.add('hidden');
+  });
+  $('startCamera').addEventListener('click',async()=>{
+    if(!sessionStorage.getItem('KG63_staffKey')){alert('先に係員情報を設定してください。');return;}
+    if(cameraRunning) return;
+    if(typeof Html5Qrcode==='undefined') {status('QR読み取りライブラリを取得できません。通信環境を確認するか、受付番号を手入力してください。','warning');return;}
+    try{
+      scanner = new Html5Qrcode('reader',{verbose:false,formatsToSupport:[Html5QrcodeSupportedFormats.QR_CODE]});
+      await scanner.start({facingMode:'environment'},{fps:8,qrbox:{width:220,height:220}},acceptRead,()=>{});
+      cameraRunning=true;status('カメラにQRコードをかざしてください。');
+    }catch(err){cameraRunning=false;status('カメラを起動できません。ブラウザのカメラ許可を確認するか、受付番号を手入力してください。','warning');console.error(err);}
+  });
+  $('stopCamera').addEventListener('click',async()=>{await stopCamera();status('カメラを停止しました。');});
+  $('lookupForm').addEventListener('submit',(e)=>{
+    const id=currentId(),name=$('staffName').value.trim(),key=$('staffKey').value.trim();
+    if(!VALID.test(id)){e.preventDefault();status('受付番号の形式を確認してください。','warning');return;}
+    if(!name || !/^[A-Za-z0-9]{32,128}$/.test(key)){e.preventDefault();alert('係員情報を入力してください。');return;}
+    $('formId').value=id;$('formKey').value=key;$('formStaff').value=name;
+    $('submitLookup').disabled=true;$('submitLookup').textContent='申込内容を確認しています…';
+  });
+  window.addEventListener('pageshow',()=>{$('submitLookup').disabled=false;$('submitLookup').textContent='申込内容を確認する';});
+})();
+</script>
+</body>
+</html>
